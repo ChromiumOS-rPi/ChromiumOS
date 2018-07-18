@@ -24,6 +24,8 @@ cd overlay-rpi
 git checkout ${REV}
 cd ${BASEDIR}/${REV}
 
+cp project_scripts/build_in_chroot src/scripts/build_in_chroot
+
 grep rpi src/third_party/chromiumos-overlay/eclass/cros-board.eclass > /dev/null
 if [ $? != 0 ]; then sed -i '/raspberrypi/a \\trpi' src/third_party/chromiumos-overlay/eclass/cros-board.eclass ; fi
 
