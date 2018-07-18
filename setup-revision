@@ -1,0 +1,32 @@
+#!/bin/bash
+
+BASEDIR=`pwd`
+REV="R56-9000.B"
+
+if [[ $# -lt 1 ]]; then
+  echo "Please pass a revision"
+	echo "Defaulting to r56..."
+else
+  echo "Using revision " $1
+  REV=$1
+fi
+
+
+cd ${BASEDIR}
+. .source
+mkdir ${REV}
+cd ${BASEDIR}/${REV}
+repo init -u https://chromium.googlesource.com/chromiumos/manifest.git --repo-url https://chromium.googlesource.com/external/repo.git -b ${REV}
+repo sync -j8
+cd src/overlays
+git clone https://github.com/ChromiumOS-rPi/overlay-rpi
+cd overlay-rpi
+git checkout ${REV}
+cd ${BASEDIR}/${REV}
+
+grep rpi src/third_party/chromiumos-overlay/eclass/cros-board.eclass > /dev/null
+if [ $? != 0 ]; then sed -i '/raspberrypi/a \\trpi' src/third_party/chromiumos-overlay/eclass/cros-board.eclass ; fi
+
+cros_sdk
+
+

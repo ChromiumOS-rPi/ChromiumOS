@@ -1,0 +1,2 @@
+export PATH=/projects/ChromiumOS-pi/depot_tools:$PATH
+umask 022
