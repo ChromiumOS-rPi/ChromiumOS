@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo apt-get install python-pip lvm2 thin-provisioning-tools
+pip install oauth2client google-apitools
+
