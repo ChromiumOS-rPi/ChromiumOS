@@ -13,18 +13,25 @@ fi
 
 
 cd ${BASEDIR}
+
+cat > .source <<EOF
+export PATH=${BASEDIR}/depot_tools:$PATH
+umask 022
+EOF
 . .source
+
 mkdir ${REV}
 cd ${BASEDIR}/${REV}
-repo init -u https://chromium.googlesource.com/chromiumos/manifest.git --repo-url https://chromium.googlesource.com/external/repo.git -b ${REV}
+repo init -u https://chromium.googlesource.com/chromiumos/manifest.git --repo-url https://chromium.googlesource.com/external/repo.git -b release-${REV}
 repo sync -j8
+
 cd src/overlays
 git clone https://github.com/ChromiumOS-rPi/overlay-rpi
 cd overlay-rpi
 git checkout ${REV}
 cd ${BASEDIR}/${REV}
 
-cp project_scripts/build_in_chroot src/scripts/build_in_chroot
+cp ${BASEDIR}/project_scripts/build_in_chroot src/scripts/build_in_chroot
 
 grep rpi src/third_party/chromiumos-overlay/eclass/cros-board.eclass > /dev/null
 if [ $? != 0 ]; then sed -i '/raspberrypi/a \\trpi' src/third_party/chromiumos-overlay/eclass/cros-board.eclass ; fi
